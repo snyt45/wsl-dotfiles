@@ -26,7 +26,6 @@ brew bundle
 #-------------------------------------------------------------------------------
 # fish setup
 #-------------------------------------------------------------------------------
-sudo -e /etc/shells
 echo "/home/linuxbrew/.linuxbrew/bin/fish" | sudo tee -a /etc/shells
 chsh -s /home/linuxbrew/.linuxbrew/bin/fish
 
@@ -35,9 +34,12 @@ chsh -s /home/linuxbrew/.linuxbrew/bin/fish
 #-------------------------------------------------------------------------------
 
 # dein install
-curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh \> installer.sh
+curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh > installer.sh
 sh ./installer.sh ~/.cache/dein
 rm -rf installer.sh
+
+# clipboard
+sudo chmod +x ~/bin/win32yank.exe
 
 # pyenv setup
 # https://github.com/pyenv/pyenv/wiki/Common-build-problems
@@ -51,10 +53,13 @@ pyenv install 3.9.1
 pyenv virtualenv 2.7.17 py2
 pyenv virtualenv 3.9.1 py3
 
-pyenv activate py2
+# issue: https://github.com/pyenv/pyenv-virtualenv/issues/284
+source ~/.pyenv/versions/2.7.17/envs/py2/bin/activate.fish
+# pyenv activate py2
 pip install neovim
 
-pyenv activate py3
+source ~/.pyenv/versions/3.9.1/envs/py3/bin/activate.fish
+# pyenv activate py3
 pip install neovim
 
 # ruby
