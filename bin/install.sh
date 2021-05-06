@@ -54,11 +54,11 @@ pyenv virtualenv 2.7.17 py2
 pyenv virtualenv 3.9.1 py3
 
 # issue: https://github.com/pyenv/pyenv-virtualenv/issues/284
-source ~/.pyenv/versions/2.7.17/envs/py2/bin/activate.fish
+. ~/.pyenv/versions/2.7.17/envs/py2/bin/activate.fish
 # pyenv activate py2
 pip install neovim
 
-source ~/.pyenv/versions/3.9.1/envs/py3/bin/activate.fish
+. ~/.pyenv/versions/3.9.1/envs/py3/bin/activate.fish
 # pyenv activate py3
 pip install neovim
 
@@ -66,6 +66,8 @@ pip install neovim
 rbenv install 2.7.2
 rbenv global 2.7.2
 
+# gemコマンドを使えるようにする
+echo 'eval "$(rbenv init -)"' >> ~/.profile
 gem install neovim
 
 # Node.js
