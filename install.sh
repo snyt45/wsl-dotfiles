@@ -1,79 +1,105 @@
 #!/bin/bash
 
-DOTFILES="$(pwd)"
-COLOR_GRAY="\033[1;38;5;243m"
-COLOR_BLUE="\033[1;34m"
-COLOR_GREEN="\033[1;32m"
-COLOR_RED="\033[1;31m"
-COLOR_PURPLE="\033[1;35m"
-COLOR_YELLOW="\033[1;33m"
-COLOR_NONE="\033[0m"
+readonly DOTPATH=~/.dotfiles
+readonly DOTFILES_GITHUB="https://github.com/snyt45/wsl-dotfiles.git"
+
+# Color Palette Constant
+readonly GRAY="\033[1;38;5;243m"
+readonly BLUE="\033[1;34m"
+readonly GREEN="\033[1;32m"
+readonly RED="\033[1;31m"
+readonly PURPLE="\033[1;35m"
+readonly YELLOW="\033[1;33m"
+readonly NONE="\033[0m"
 
 title() {
-    echo "${COLOR_PURPLE}$1${COLOR_NONE}"
-    echo "${COLOR_GRAY}==============================${COLOR_NONE}"
+    echo "${PURPLE}$1${NONE}"
+    echo "${GRAY}==============================${NONE}"
 }
 
 error() {
-    echo -e "${COLOR_RED}Error: ${COLOR_NONE}$1"
+    echo -e "${RED}Error: ${NONE}$1"
     exit 1
 }
 
 warning() {
-    echo -e "${COLOR_YELLOW}Warning: ${COLOR_NONE}$1"
+    echo -e "$YELLOW}Warning: ${NONE}$1"
 }
 
 info() {
-    echo "${COLOR_BLUE}Info: ${COLOR_NONE}$1"
+    echo "${BLUE}Info: ${NONE}$1"
 }
 
 success() {
-    echo "${COLOR_GREEN}$1${COLOR_NONE}"
+    echo "${GREEN}$1${NONE}"
+}
+
+dotfiles_download() {
+    if [ -d "$DOTPATH" ]; then
+        info "$DOTPATH: Already exists"
+        return 1
+    fi
+
+    info "Download dotfiles"
+    git clone "$DOTFILES_GITHUB" "$DOTPATH"
 }
 
 setup_symlinks() {
-    title "Setting up symlinks"
+    info "Setup dotfiles"
 
-    # ~
-    for f in .??*; do
-      [ "$f" = ".gitignore" ] && continue
-      [ "$f" = ".git" ] && continue
+    # DOTPATH
+    for f in $DOTPATH/.??* $DOTPATH/Brewfile;
+    do
+        [[ `basename $f` == ".gitignore" ]] && continue
+        [[ `basename $f` == ".git" ]] && continue
 
-      ln -snfv "$DOTFILES/$f" ~/
+        ln -snfv "$f" ~/
     done
-    ln -snfv "$DOTFILES/Brewfile" ~/
 
     # bin
     mkdir -p "$HOME/bin"
-    for f in bin/.??*; do
-      ln -snfv "$DOTFILES/bin/$f" ~/bin/
+    bin="$DOTPATH/bin"
+    for f in $bin/*.exe;
+    do
+      ln -snfv "$f" ~/bin/
     done
-    
+
     # config
     mkdir -p "$HOME/config"
-
+    
     mkdir -p "$HOME/config/fish"
-    for f in config/fish/.??*; do
-      ln -snfv "$DOTFILES/config/fish/$f" ~/config/fish/
+    fish="$DOTPATH/config/fish"
+    for f in $fish/*.fish $fish/fish_variables;
+    do
+      ln -snfv "$f" ~/config/fish/
     done
+
     mkdir -p "$HOME/config/fish/conf.d"
-    for f in config/fish/conf.d/.??*; do
-      ln -snfv "$DOTFILES/config/fish/conf.d/$f" ~/config/fish/conf.d/
+    conf_d="$DOTPATH/config/fish/conf.d"
+    for f in $conf_d/*.fish;
+    do
+      ln -snfv "$f" ~/config/fish/conf.d/
     done
 
     mkdir -p "$HOME/config/nvim"
-    for f in config/nvim/.??*; do
-      ln -snfv "$DOTFILES/config/nvim/$f" ~/config/nvim/
-    done
-    mkdir -p "$HOME/config/nvim/dein"
-    for f in config/nvim/dein/.??*; do
-      ln -snfv "$DOTFILES/config/nvim/dein/$f" ~/config/nvim/dein/
-    done
-    mkdir -p "$HOME/config/nvim/rc"
-    for f in config/nvim/rc/.??*; do
-      ln -snfv "$DOTFILES/config/nvim/rc/$f" ~/config/nvim/rc/
+    nvim="$DOTPATH/config/nvim"
+    for f in $nvim/*.vim;
+    do
+      ln -snfv "$f" ~/config/nvim/
     done
 
+    mkdir -p "$HOME/config/nvim/dein"
+    dein="$DOTPATH/config/nvim/dein"
+    for f in $dein/*.toml; do
+      ln -snfv "$f" ~/config/nvim/dein/
+    done
+
+    mkdir -p "$HOME/config/nvim/rc"
+    rc="$DOTPATH/config/nvim/rc"
+    for f in $rc/*.vim;
+    do
+      ln -snfv "$f" ~/config/nvim/rc/
+    done
 }
 
 setup_homebrew() {
@@ -181,6 +207,9 @@ setup_neovim() {
 }
 
 case "$1" in
+    download)
+        dotfiles_download
+        ;;
     link)
         setup_symlinks
         ;;
@@ -204,7 +233,7 @@ case "$1" in
         setup_neovim
         ;;
     *)
-        echo -e $"\nUsage: $(basename "$0") {link|git|homebrew|shell|neovim|all}\n"
+        echo -e $"\nUsage: $(basename "$0") {download|link|git|homebrew|shell|neovim|all}\n"
         exit 1
         ;;
 esac
