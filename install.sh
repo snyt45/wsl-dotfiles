@@ -238,4 +238,5 @@ case "$1" in
         ;;
 esac
 
+dotfiles_download
 success "Done."
