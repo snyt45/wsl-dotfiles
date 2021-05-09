@@ -1,7 +1,6 @@
 #!/bin/bash
 
 readonly DOTPATH=~/.dotfiles
-readonly DOTFILES_GITHUB="https://github.com/snyt45/wsl-dotfiles.git"
 
 # Color Palette Constant
 readonly GRAY="\033[1;38;5;243m"
@@ -207,9 +206,6 @@ setup_neovim() {
 }
 
 case "$1" in
-    download)
-        dotfiles_download
-        ;;
     link)
         setup_symlinks
         ;;
@@ -233,10 +229,9 @@ case "$1" in
         setup_neovim
         ;;
     *)
-        echo -e $"\nUsage: $(basename "$0") {download|link|git|homebrew|shell|neovim|all}\n"
+        echo -e $"\nUsage: $(basename "$0") {link|git|homebrew|shell|neovim|all}\n"
         exit 1
         ;;
 esac
 
-dotfiles_download
 success "Done."
