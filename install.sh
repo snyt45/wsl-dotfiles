@@ -210,6 +210,8 @@ setup_neovim() {
     gem install neovim
 
     # Node.js
+    yarn global add n
+    n10
     npm install -g neovim
 }
 
