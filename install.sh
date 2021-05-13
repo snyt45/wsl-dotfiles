@@ -196,21 +196,17 @@ setup_neovim() {
     pyenv virtualenv 3.9.1 py3
 
     # issue: https://github.com/pyenv/pyenv-virtualenv/issues/284
-    #. ~/.pyenv/versions/2.7.17/envs/py2/bin/activate
-    pyenv activate py2
+    . ~/.pyenv/versions/2.7.17/envs/py2/bin/activate
+    #pyenv activate py2
     pip install neovim
 
-    #. ~/.pyenv/versions/3.9.1/envs/py3/bin/activate
-    pyenv activate py3
+    . ~/.pyenv/versions/3.9.1/envs/py3/bin/activate
+    #pyenv activate py3
     pip install neovim
 
     # ruby
     rbenv install 2.7.2
     rbenv global 2.7.2
-
-    # gemコマンドを使えるようにする
-    echo 'eval "$(rbenv init -)"' >> ~/.profile
-    . ~/.profile
     gem install neovim
 
     # Node.js
