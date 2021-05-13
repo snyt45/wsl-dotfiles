@@ -149,8 +149,6 @@ setup_shell() {
     if [ "$SHELL" != "$fish_path" ]; then
         chsh -s "$fish_path"
         info "default shell changed to $fish_path"
-        exec $SHELL -l
-        info "Restart the shell with the login shell >> $SHELL"
     fi
 }
 
@@ -226,14 +224,14 @@ case "$1" in
     link)
         setup_symlinks
         ;;
-    git)
-        setup_git
-        ;;
     homebrew)
         setup_homebrew
         ;;
     shell)
         setup_shell
+        ;;
+    git)
+        setup_git
         ;;
     neovim)
         setup_neovim
@@ -243,7 +241,6 @@ case "$1" in
         setup_homebrew
         setup_shell
         setup_git
-        setup_neovim
         ;;
     *)
         echo -e $"\nUsage: $(basename "$0") {link|git|homebrew|shell|neovim|all}\n"
