@@ -172,6 +172,30 @@ setup_git() {
     fi
 }
 
+# https://honmushi.com/2020/01/15/yarn-install/
+setup_yarn() {
+    title "Setting up Yarn"
+
+    sudo apt remove cmdtest
+    sudo apt remove yarn
+
+    curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+    echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+    sudo apt-get update 
+
+    sudo apt-get install yarn
+}
+
+# package manager: https://github.com/tj/n
+setup_node() {
+    title "Setting up Node.js"
+
+    sudo mkdir -p /usr/local/n
+    sudo chown -R $(whoami) /usr/local/n
+    sudo chown -R $(whoami) /usr/local/bin /usr/local/lib /usr/local/include /usr/local/share
+    n 10 # v10 install
+}
+
 setup_neovim() {
     title "Setting up Neovim"
 
@@ -210,8 +234,6 @@ setup_neovim() {
     gem install neovim
 
     # Node.js
-    yarn global add n
-    n10
     npm install -g neovim
 }
 
@@ -231,6 +253,12 @@ case "$1" in
     git)
         setup_git
         ;;
+    yarn)
+        setup_yarn
+        ;;
+    node)
+        setup_node
+        ;;
     neovim)
         setup_neovim
         ;;
@@ -239,9 +267,11 @@ case "$1" in
         setup_homebrew
         setup_shell
         setup_git
+        setup_yarn
+        setup_node
         ;;
     *)
-        echo -e $"\nUsage: $(basename "$0") {link|git|homebrew|shell|neovim|all}\n"
+        echo -e $"\nUsage: $(basename "$0") {link|homebrew|shell|git|yarn|neovim|all}\n"
         exit 1
         ;;
 esac
