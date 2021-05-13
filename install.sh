@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 readonly DOTPATH=~/.dotfiles
 
@@ -33,71 +33,80 @@ success() {
     echo "${GREEN}$1${NONE}"
 }
 
-dotfiles_download() {
-    if [ -d "$DOTPATH" ]; then
-        info "$DOTPATH: Already exists"
-        return 1
-    fi
-
-    info "Download dotfiles"
-    git clone "$DOTFILES_GITHUB" "$DOTPATH"
+check_shell() {
+    readlink /proc/$$/exe
 }
 
 setup_symlinks() {
     info "Setup dotfiles"
 
-    # DOTPATH
-    for f in $DOTPATH/.??* $DOTPATH/Brewfile;
+    # ~/
+    home_target=${DOTPATH}/.??*
+    home_target=$(eval echo $home_target) # ワイルドカードを展開するために必要
+    for f in $home_target;
     do
-        [[ `basename $f` == ".gitignore" ]] && continue
-        [[ `basename $f` == ".git" ]] && continue
+        [ `basename $f` = ".gitignore" ] && continue
+        [ `basename $f` = ".git" ] && continue
 
         ln -snfv "$f" ~/
     done
 
-    # bin
+    # ~/bin
     mkdir -p "$HOME/bin"
-    bin="$DOTPATH/bin"
-    for f in $bin/*.exe;
+    bin_target=${DOTPATH}/bin/*.exe
+    bin_target=$(eval echo $bin_target)
+    for f in $bin_target;
     do
-      ln -snfv "$f" ~/bin/
+        ln -snfv "$f" ~/bin/
     done
 
-    # config
-    mkdir -p "$HOME/config"
+    # ~/.config
+    mkdir -p "$HOME/.config"
     
-    mkdir -p "$HOME/config/fish"
-    fish="$DOTPATH/config/fish"
-    for f in $fish/*.fish $fish/fish_variables;
+    # ~/.config/fish
+    mkdir -p "$HOME/.config/fish"
+    fish_target="${DOTPATH}/config/fish/*.fish \
+                 ${DOTPATH}/config/fish_variables"
+    fish_target=$(eval echo $fish_target)
+    for f in $fish_target;
     do
-      ln -snfv "$f" ~/config/fish/
+        ln -snfv "$f" ~/.config/fish/
     done
 
-    mkdir -p "$HOME/config/fish/conf.d"
-    conf_d="$DOTPATH/config/fish/conf.d"
-    for f in $conf_d/*.fish;
+    # ~/.config/fish/conf.d
+    mkdir -p "$HOME/.config/fish/conf.d"
+    confd_target=${DOTPATH}/config/fish/conf.d/*.fish
+    confd_target=$(eval echo $confd_target)
+    for f in $confd_target;
     do
-      ln -snfv "$f" ~/config/fish/conf.d/
+        ln -snfv "$f" ~/.config/fish/conf.d/
     done
 
-    mkdir -p "$HOME/config/nvim"
-    nvim="$DOTPATH/config/nvim"
-    for f in $nvim/*.vim;
+    # ~/.config/nvim
+    mkdir -p "$HOME/.config/nvim"
+    nvim_target=${DOTPATH}/config/nvim/*.vim
+    nvim_target=$(eval echo $nvim_target)
+    for f in $nvim_target;
     do
-      ln -snfv "$f" ~/config/nvim/
+        ln -snfv "$f" ~/.config/nvim/
     done
 
-    mkdir -p "$HOME/config/nvim/dein"
-    dein="$DOTPATH/config/nvim/dein"
-    for f in $dein/*.toml; do
-      ln -snfv "$f" ~/config/nvim/dein/
+    # ~/.config/nvim/dein
+    mkdir -p "$HOME/.config/nvim/dein"
+    dein_target=${DOTPATH}/config/nvim/dein/*.toml
+    dein_target=$(eval echo $dein_target)
+    for f in $dein_target;
+    do
+        ln -snfv "$f" ~/.config/nvim/dein/
     done
 
-    mkdir -p "$HOME/config/nvim/rc"
-    rc="$DOTPATH/config/nvim/rc"
-    for f in $rc/*.vim;
+    # ~/.config/nvim/rc
+    mkdir -p "$HOME/.config/nvim/rc"
+    rc_target=${DOTPATH}/config/nvim/rc/*.vim
+    rc_target=$(eval echo $rc_target)
+    for f in $rc_target;
     do
-      ln -snfv "$f" ~/config/nvim/rc/
+        ln -snfv "$f" ~/.config/nvim/rc/
     done
 }
 
@@ -119,6 +128,8 @@ setup_homebrew() {
         test -d /home/linuxbrew/.linuxbrew && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
         test -r ~/.bash_profile && echo "eval \$($(brew --prefix)/bin/brew shellenv)" >> ~/.bash_profile
         echo "eval \$($(brew --prefix)/bin/brew shellenv)" >> ~/.profile
+        . ~/.bash_profile
+        . ~/.profile
     fi
 
     # install brew dependencies from Brewfile
@@ -185,12 +196,12 @@ setup_neovim() {
     pyenv virtualenv 3.9.1 py3
 
     # issue: https://github.com/pyenv/pyenv-virtualenv/issues/284
-    . ~/.pyenv/versions/2.7.17/envs/py2/bin/activate.fish
-    # pyenv activate py2
+    #. ~/.pyenv/versions/2.7.17/envs/py2/bin/activate
+    pyenv activate py2
     pip install neovim
 
-    . ~/.pyenv/versions/3.9.1/envs/py3/bin/activate.fish
-    # pyenv activate py3
+    #. ~/.pyenv/versions/3.9.1/envs/py3/bin/activate
+    pyenv activate py3
     pip install neovim
 
     # ruby
@@ -199,6 +210,7 @@ setup_neovim() {
 
     # gemコマンドを使えるようにする
     echo 'eval "$(rbenv init -)"' >> ~/.profile
+    . ~/.profile
     gem install neovim
 
     # Node.js
@@ -206,6 +218,9 @@ setup_neovim() {
 }
 
 case "$1" in
+    check_shell)
+        check_shell
+        ;;
     link)
         setup_symlinks
         ;;
