@@ -127,9 +127,9 @@ setup_homebrew() {
         test -d ~/.linuxbrew && eval "$(~/.linuxbrew/bin/brew shellenv)"
         test -d /home/linuxbrew/.linuxbrew && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
         test -r ~/.bash_profile && echo "eval \$($(brew --prefix)/bin/brew shellenv)" >> ~/.bash_profile
-        echo "eval \$($(brew --prefix)/bin/brew shellenv)" >> ~/.profile
-        . ~/.bash_profile
-        . ~/.profile
+        test -r ~/.profile && echo "eval \$($(brew --prefix)/bin/brew shellenv)" >> ~/.profile
+        test -r ~/.bash_profile && . ~/.bash_profile
+        test -r ~/.profile && . ~/.profile
     fi
 
     # install brew dependencies from Brewfile
@@ -149,6 +149,8 @@ setup_shell() {
     if [ "$SHELL" != "$fish_path" ]; then
         chsh -s "$fish_path"
         info "default shell changed to $fish_path"
+        exec $SHELL -l
+        info "Restart the shell with the login shell >> $SHELL"
     fi
 }
 
