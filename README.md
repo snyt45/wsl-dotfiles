@@ -18,3 +18,6 @@ git cloneなどコマンド経由の場合、ディレクトリ/ファイルの�
 ```/etc/wsl.conf
 options = "metadata,umask=22,fmask=11,uid=1000,gid=1000"
 ```
+
+# WSL + Docker パーミッション問題
+[【VSCode】WSL2を利用したコンテナ開発での権限問題を解決する【Remote Containers】 \- Qiita](https://qiita.com/kiyo27/items/c465a065874eff067242)
