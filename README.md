@@ -20,6 +20,7 @@ options = "metadata,umask=22,fmask=11,uid=1000,gid=1000"
 ```
 
 直接パーミッションを変更する場合(bashで実行)
+※とりあえず権限問題を解決するときはこれ
 ```
 sudo chown -R $(whoami) .
 ```
