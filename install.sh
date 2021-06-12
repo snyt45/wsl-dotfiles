@@ -65,6 +65,7 @@ setup_symlinks() {
     
     # ~/.config/fish
     mkdir -p "$HOME/.config/fish"
+    cp --force /home/snyt45/.dotfiles/config/fish/fish_plugins ~/.config/fish/ # not symbolic link
     fish_target="${DOTPATH}/config/fish/*.fish \
                  ${DOTPATH}/config/fish_variables"
     fish_target=$(eval echo $fish_target)
