@@ -1,0 +1,20 @@
+[user]
+	name = yuta.sano
+	email = snyt45@gmail.com
+[credential]
+	helper = store
+[core]
+	autoCRLF = false
+[alias]
+  d = diff
+  co = checkout
+  ci = commit
+  ps = !git push origin $(git rev-parse --abbrev-ref HEAD)
+  pl = !git pull origin $(git rev-parse --abbrev-ref HEAD)
+  st = status
+  br = branch
+  ba = branch -a
+  bm = branch --merged
+  bn = branch --no-merged
+  hist = log --pretty=format:'%C(auto) %h %Cgreen %cd %Cblue [%cn] %Creset %s %C(auto) %d' --graph --all --relative-date
+  llog = log --pretty=format:'%C(auto) %h %Cgreen (%cd) %Cblue %cn %Creset %s %C(auto) %d' --graph --name-status --relative-date
