@@ -5,3 +5,7 @@ alias vi='nvim'
 alias ls='ls -1 --color=auto'
 alias la='ls -al'
 alias ll='ls -l'
+
+# git
+alias g='git'
+
