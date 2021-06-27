@@ -1,0 +1,6 @@
+# main viewの左端にコミットIDを表示する
+set main-view = id date author commit-title:graph=yes,refs=yes
+
+bind refs L ?git pull origin %(branch)
+bind main S ?git stash save "%(prompt Enter stash comment: )"
+bind refs M ?git merge %(branch)
