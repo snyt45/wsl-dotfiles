@@ -7,15 +7,18 @@
 	autoCRLF = false
 
 # TODO 次回WSLセットアップ時、tmpではなく~/dev/work/icareディレクトリにリポジトリを作る
-[includeIf "gitdir:~/tmp/carely"]
-  path = ~/.gitconfig_icare
+[includeIf "gitdir:~/tmp/carely/"]
+ path = ~/.gitconfig_icare
 
 # TODO 次回WSLセットアップ時、tmpではなく~/dev/work/diddyworksディレクトリにリポジトリを作る
-[includeIf "gitdir:~/tmp/liss"]
+[includeIf "gitdir:~/tmp/liss/"]
   path = ~/.gitconfig_private
 
 # TODO 次回WSLセットアップ時、tmpではなく~/dev/privateディレクトリにリポジトリを作る
-[includeIf "gitdir:~/tmp/x"]
+[includeIf "gitdir:~/tmp/x/"]
+  path = ~/.gitconfig_private
+
+[includeIf "gitdir:~/.dotfiles/"]
   path = ~/.gitconfig_private
 
 [alias]
