@@ -5,6 +5,19 @@
 	helper = store
 [core]
 	autoCRLF = false
+
+# TODO 次回WSLセットアップ時、tmpではなく~/dev/work/icareディレクトリにリポジトリを作る
+[includeIf "gitdir:~/tmp/carely"]
+  path = ~/.gitconfig_icare
+
+# TODO 次回WSLセットアップ時、tmpではなく~/dev/work/diddyworksディレクトリにリポジトリを作る
+[includeIf "gitdir:~/tmp/liss"]
+  path = ~/.gitconfig_private
+
+# TODO 次回WSLセットアップ時、tmpではなく~/dev/privateディレクトリにリポジトリを作る
+[includeIf "gitdir:~/tmp/x"]
+  path = ~/.gitconfig_private
+
 [alias]
   d = diff
   co = checkout
